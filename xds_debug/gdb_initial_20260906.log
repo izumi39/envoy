@@ -1,0 +1,600 @@
+warning: Could not find DWO CU bazel-out/aarch64-opt/bin/source/exe/_objs/envoy_main_entry_lib/main.dwo(0xab86068289e5556e) referenced by CU at offset 0x0 [in module /build/bazel_root/base/execroot/_main/bazel-out/aarch64-opt/bin/source/exe/envoy-static]
+/workspaces/envoy/xds_debug/gdb_inspect.gdb:12: Error in sourced command file:
+DWARF Error: unexpected tag 'DW_TAG_skeleton_unit' at offset 0x0
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+
+Thread 6 (Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim"):
+#0  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000aaaae317a9c0 in absl::lts_20260107::synchronization_internal::FutexImpl::WaitRelativeTimeout (v=0xffffae2f0140, val=0, rel_timeout=<optimized out>) at external/abseil-cpp+/absl/synchronization/internal/futex.h:130
+#2  absl::lts_20260107::synchronization_internal::FutexWaiter::WaitUntil (v=<optimized out>, val=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/internal/futex_waiter.cc:49
+#3  0x0000aaaae317aa30 in absl::lts_20260107::synchronization_internal::FutexWaiter::Wait (this=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/internal/futex_waiter.cc:74
+#4  0x0000aaaae317a738 in AbslInternalPerThreadSemWait_lts_20260107 (t=...) at external/abseil-cpp+/absl/synchronization/internal/per_thread_sem.cc:93
+#5  0x0000aaaae317a150 in absl::lts_20260107::synchronization_internal::PerThreadSem::Wait (t=...) at external/abseil-cpp+/absl/synchronization/internal/per_thread_sem.h:116
+#6  absl::lts_20260107::Mutex::DecrementSynchSem (mu=0xaaaae3709a18 <g_mu>, t=..., w=<optimized out>) at external/abseil-cpp+/absl/synchronization/mutex.cc:598
+#7  absl::lts_20260107::CondVar::WaitCommon (this=<optimized out>, mutex=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/mutex.cc:2641
+
+Thread 5 (Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"):
+#0  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000ffffaebc2618 in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#2  0x0000ffffaebc265c [PAC] in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#3  0x0000ffffaec2e164 [PAC] in epoll_pwait () from /lib/aarch64-linux-gnu/libc.so.6
+#4  0x0000aaaae23fdb60 [PAC] in do_epoll_wait (ps=<optimized out>, deadline=...) at external/grpc+/src/core/lib/iomgr/ev_epoll1_linux.cc:731
+#5  pollset_work (ps=<optimized out>, worker_hdl=<optimized out>, deadline=...) at external/grpc+/src/core/lib/iomgr/ev_epoll1_linux.cc:1031
+#6  0x0000aaaae23e9a58 in cq_next (cq=<optimized out>, deadline=..., reserved=<optimized out>) at external/grpc+/src/core/lib/surface/completion_queue.cc:1082
+#7  0x0000aaaae20a48d8 in grpc::CompletionQueue::AsyncNextInternal (this=<optimized out>, tag=<optimized out>, ok=<optimized out>, deadline=...) at external/grpc+/src/cpp/common/completion_queue_cc.cc:147
+
+Thread 4 (Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread"):
+#0  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000ffffaebc2618 in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#2  0x0000ffffaebc265c [PAC] in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#3  0x0000ffffaec2e164 [PAC] in epoll_pwait () from /lib/aarch64-linux-gnu/libc.so.6
+#4  0x0000aaaae2c7448c [PAC] in epoll_dispatch (base=<optimized out>, tv=<optimized out>) at external/libevent+/epoll.c:519
+#5  0x0000aaaae2c721f4 in event_base_loop (base=<optimized out>, flags=<optimized out>) at external/libevent+/event.c:2072
+#6  0x0000aaaae1ffd824 in Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0::operator()() const (this=<optimized out>) at source/server/guarddog_impl.cc:234
+#7  std::__1::__invoke[abi:nqe220108]<Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0&>(Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0&) (__args=...) at external/envoy_toolshed++llvm_minimal_extension+llvm_minimal_linux_arm64/bin/../include/c++/v1/__type_traits/invoke.h:90
+
+Thread 3 (Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua"):
+#0  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000ffffaebc2618 in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#2  0x0000ffffaebc265c [PAC] in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#3  0x0000ffffaec2e164 [PAC] in epoll_pwait () from /lib/aarch64-linux-gnu/libc.so.6
+#4  0x0000aaaae2c7448c [PAC] in epoll_dispatch (base=<optimized out>, tv=<optimized out>) at external/libevent+/epoll.c:519
+#5  0x0000aaaae2c721f4 in event_base_loop (base=<optimized out>, flags=<optimized out>) at external/libevent+/event.c:2072
+#6  0x0000aaaae1ffd824 in Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0::operator()() const (this=<optimized out>) at source/server/guarddog_impl.cc:234
+#7  std::__1::__invoke[abi:nqe220108]<Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0&>(Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0&) (__args=...) at external/envoy_toolshed++llvm_minimal_extension+llvm_minimal_linux_arm64/bin/../include/c++/v1/__type_traits/invoke.h:90
+
+Thread 2 (Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"):
+#0  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000aaaae317a980 in absl::lts_20260107::synchronization_internal::FutexWaiter::WaitUntil (v=<optimized out>, val=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/internal/futex.h:112
+#2  0x0000aaaae317aa30 in absl::lts_20260107::synchronization_internal::FutexWaiter::Wait (this=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/internal/futex_waiter.cc:74
+#3  0x0000aaaae317a738 in AbslInternalPerThreadSemWait_lts_20260107 (t=...) at external/abseil-cpp+/absl/synchronization/internal/per_thread_sem.cc:93
+#4  0x0000aaaae317a150 in absl::lts_20260107::synchronization_internal::PerThreadSem::Wait (t=...) at external/abseil-cpp+/absl/synchronization/internal/per_thread_sem.h:116
+#5  absl::lts_20260107::Mutex::DecrementSynchSem (mu=0x10ebffb3f550, t=..., w=<optimized out>) at external/abseil-cpp+/absl/synchronization/mutex.cc:598
+#6  absl::lts_20260107::CondVar::WaitCommon (this=<optimized out>, mutex=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/mutex.cc:2641
+#7  0x0000aaaae201f8a8 in absl::lts_20260107::CondVar::Wait (this=<optimized out>, mu=<optimized out>) at external/abseil-cpp+/absl/synchronization/mutex.h:1004
+
+Thread 1 (Thread 0xffffaee64020 (LWP 2299982) "envoy-static"):
+#0  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000ffffaebc2618 in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#2  0x0000ffffaebc265c [PAC] in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#3  0x0000ffffaec2e164 [PAC] in epoll_pwait () from /lib/aarch64-linux-gnu/libc.so.6
+#4  0x0000aaaae2c7448c [PAC] in epoll_dispatch (base=<optimized out>, tv=<optimized out>) at external/libevent+/epoll.c:519
+#5  0x0000aaaae2c721f4 in event_base_loop (base=<optimized out>, flags=<optimized out>) at external/libevent+/event.c:2072
+#6  0x0000aaaae200d7e8 in Envoy::Server::InstanceBase::run (this=<optimized out>) at source/server/server.cc:1106
+#7  0x0000aaaae1fb7958 in Envoy::StrippedMainBase::runServer (this=0x10ebffc96530) at ./source/exe/stripped_main_base.h:65
+INSPECTION UTC 2026-09-05T18:31:58.334673+00:00
+$1 = <optimized out>
+[Inferior 1 (process 2299982) detached]
+Python Exception <class 'gdb.error'>: value has been optimized out
+/workspaces/envoy/xds_debug/gdb_inspect.gdb:41: Error in sourced command file:
+Error occurred in Python: value has been optimized out
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+
+Thread 6 (Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim"):
+#0  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000aaaae317a9c0 in absl::lts_20260107::synchronization_internal::FutexImpl::WaitRelativeTimeout (v=0xffffae2f0140, val=0, rel_timeout=<optimized out>) at external/abseil-cpp+/absl/synchronization/internal/futex.h:130
+#2  absl::lts_20260107::synchronization_internal::FutexWaiter::WaitUntil (v=<optimized out>, val=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/internal/futex_waiter.cc:49
+#3  0x0000aaaae317aa30 in absl::lts_20260107::synchronization_internal::FutexWaiter::Wait (this=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/internal/futex_waiter.cc:74
+#4  0x0000aaaae317a738 in AbslInternalPerThreadSemWait_lts_20260107 (t=...) at external/abseil-cpp+/absl/synchronization/internal/per_thread_sem.cc:93
+#5  0x0000aaaae317a150 in absl::lts_20260107::synchronization_internal::PerThreadSem::Wait (t=...) at external/abseil-cpp+/absl/synchronization/internal/per_thread_sem.h:116
+#6  absl::lts_20260107::Mutex::DecrementSynchSem (mu=0xaaaae3709a18 <g_mu>, t=..., w=<optimized out>) at external/abseil-cpp+/absl/synchronization/mutex.cc:598
+#7  absl::lts_20260107::CondVar::WaitCommon (this=<optimized out>, mutex=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/mutex.cc:2641
+
+Thread 5 (Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"):
+#0  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000ffffaebc2618 in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#2  0x0000ffffaebc265c [PAC] in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#3  0x0000ffffaec2e164 [PAC] in epoll_pwait () from /lib/aarch64-linux-gnu/libc.so.6
+#4  0x0000aaaae23fdb60 [PAC] in do_epoll_wait (ps=<optimized out>, deadline=...) at external/grpc+/src/core/lib/iomgr/ev_epoll1_linux.cc:731
+#5  pollset_work (ps=<optimized out>, worker_hdl=<optimized out>, deadline=...) at external/grpc+/src/core/lib/iomgr/ev_epoll1_linux.cc:1031
+#6  0x0000aaaae23e9a58 in cq_next (cq=<optimized out>, deadline=..., reserved=<optimized out>) at external/grpc+/src/core/lib/surface/completion_queue.cc:1082
+#7  0x0000aaaae20a48d8 in grpc::CompletionQueue::AsyncNextInternal (this=<optimized out>, tag=<optimized out>, ok=<optimized out>, deadline=...) at external/grpc+/src/cpp/common/completion_queue_cc.cc:147
+
+Thread 4 (Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread"):
+#0  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000ffffaebc2618 in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#2  0x0000ffffaebc265c [PAC] in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#3  0x0000ffffaec2e164 [PAC] in epoll_pwait () from /lib/aarch64-linux-gnu/libc.so.6
+#4  0x0000aaaae2c7448c [PAC] in epoll_dispatch (base=<optimized out>, tv=<optimized out>) at external/libevent+/epoll.c:519
+#5  0x0000aaaae2c721f4 in event_base_loop (base=<optimized out>, flags=<optimized out>) at external/libevent+/event.c:2072
+#6  0x0000aaaae1ffd824 in Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0::operator()() const (this=<optimized out>) at source/server/guarddog_impl.cc:234
+#7  std::__1::__invoke[abi:nqe220108]<Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0&>(Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0&) (__args=...) at external/envoy_toolshed++llvm_minimal_extension+llvm_minimal_linux_arm64/bin/../include/c++/v1/__type_traits/invoke.h:90
+
+Thread 3 (Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua"):
+#0  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000ffffaebc2618 in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#2  0x0000ffffaebc265c [PAC] in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#3  0x0000ffffaec2e164 [PAC] in epoll_pwait () from /lib/aarch64-linux-gnu/libc.so.6
+#4  0x0000aaaae2c7448c [PAC] in epoll_dispatch (base=<optimized out>, tv=<optimized out>) at external/libevent+/epoll.c:519
+#5  0x0000aaaae2c721f4 in event_base_loop (base=<optimized out>, flags=<optimized out>) at external/libevent+/event.c:2072
+#6  0x0000aaaae1ffd824 in Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0::operator()() const (this=<optimized out>) at source/server/guarddog_impl.cc:234
+#7  std::__1::__invoke[abi:nqe220108]<Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0&>(Envoy::Server::GuardDogImpl::start(Envoy::Api::Api&)::$_0&) (__args=...) at external/envoy_toolshed++llvm_minimal_extension+llvm_minimal_linux_arm64/bin/../include/c++/v1/__type_traits/invoke.h:90
+
+Thread 2 (Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"):
+#0  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000aaaae317a980 in absl::lts_20260107::synchronization_internal::FutexWaiter::WaitUntil (v=<optimized out>, val=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/internal/futex.h:112
+#2  0x0000aaaae317aa30 in absl::lts_20260107::synchronization_internal::FutexWaiter::Wait (this=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/internal/futex_waiter.cc:74
+#3  0x0000aaaae317a738 in AbslInternalPerThreadSemWait_lts_20260107 (t=...) at external/abseil-cpp+/absl/synchronization/internal/per_thread_sem.cc:93
+#4  0x0000aaaae317a150 in absl::lts_20260107::synchronization_internal::PerThreadSem::Wait (t=...) at external/abseil-cpp+/absl/synchronization/internal/per_thread_sem.h:116
+#5  absl::lts_20260107::Mutex::DecrementSynchSem (mu=0x10ebffb3f550, t=..., w=<optimized out>) at external/abseil-cpp+/absl/synchronization/mutex.cc:598
+#6  absl::lts_20260107::CondVar::WaitCommon (this=<optimized out>, mutex=<optimized out>, t=...) at external/abseil-cpp+/absl/synchronization/mutex.cc:2641
+#7  0x0000aaaae201f8a8 in absl::lts_20260107::CondVar::Wait (this=<optimized out>, mu=<optimized out>) at external/abseil-cpp+/absl/synchronization/mutex.h:1004
+
+Thread 1 (Thread 0xffffaee64020 (LWP 2299982) "envoy-static"):
+#0  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#1  0x0000ffffaebc2618 in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#2  0x0000ffffaebc265c [PAC] in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+#3  0x0000ffffaec2e164 [PAC] in epoll_pwait () from /lib/aarch64-linux-gnu/libc.so.6
+#4  0x0000aaaae2c7448c [PAC] in epoll_dispatch (base=<optimized out>, tv=<optimized out>) at external/libevent+/epoll.c:519
+#5  0x0000aaaae2c721f4 in event_base_loop (base=<optimized out>, flags=<optimized out>) at external/libevent+/event.c:2072
+#6  0x0000aaaae200d7e8 in Envoy::Server::InstanceBase::run (this=<optimized out>) at source/server/server.cc:1106
+#7  0x0000aaaae1fb7958 in Envoy::StrippedMainBase::runServer (this=0x10ebffc96530) at ./source/exe/stripped_main_base.h:65
+INSPECTION UTC 2026-09-05T18:32:26.230288+00:00
+$1 = {
+  {
+    __ptr_ = 0x10ebffd72000,
+    __padding1_147_ = {<No data fields>},
+    __deleter_ = {<No data fields>},
+    __padding2_147_ = {<No data fields>}
+  }
+}
+$2 = {
+  {
+    __ptr_ = 0x10ebfff69730,
+    __padding1_147_ = {<No data fields>},
+    __deleter_ = {<No data fields>},
+    __padding2_147_ = {<No data fields>}
+  }
+}
+[Inferior 1 (process 2299982) detached]
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+INSPECTION UTC 2026-09-05T18:32:44.386441+00:00
+$1 = false
+$2 = {
+  <std::__1::__list_imp<std::__1::reference_wrapper<Envoy::Event::Dispatcher>, std::__1::allocator<std::__1::reference_wrapper<Envoy::Event::Dispatcher> > >> = {
+    __end_ = {
+      __prev_ = 0x10ebff8c5080,
+      __next_ = 0x10ebff8c5020
+    },
+    {
+      __size_ = 4,
+      __padding1_506_ = {<No data fields>},
+      __node_alloc_ = {<No data fields>},
+      __padding2_506_ = {<No data fields>}
+    }
+  }, <No data fields>}
+/* offset      |    size */  type = class std::__1::list<std::__1::reference_wrapper<Envoy::Event::Dispatcher>, std::__1::allocator<std::__1::reference_wrapper<Envoy::Event::Dispatcher> > > [with _Tp = std::__1::reference_wrapper<Envoy::Event::Dispatcher>, _Alloc = std::__1::allocator<std::__1::reference_wrapper<Envoy::Event::Dispatcher> >] : private std::__1::__list_imp<_Tp, _Alloc> {
+
+                               /* total size (bytes):   24 */
+                             }
+[Inferior 1 (process 2299982) detached]
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+INSPECTION UTC 2026-09-05T18:33:20.903566+00:00
+$1 = false
+REGISTERED_WORKERS 4
+[Inferior 1 (process 2299982) detached]
+Python Exception <class 'gdb.error'>: No type named std::__1::__list_node<std::__1::reference_wrapper<Envoy::Event::Dispatcher>, void *>.
+/workspaces/envoy/xds_debug/gdb_inspect.gdb:51: Error in sourced command file:
+Error occurred in Python: No type named std::__1::__list_node<std::__1::reference_wrapper<Envoy::Event::Dispatcher>, void *>.
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+INSPECTION UTC 2026-09-05T18:33:47.522458+00:00
+$1 = false
+REGISTERED_WORKERS 4
+NODE_BASE_BYTES 8 REF_BYTES 8
+[Inferior 1 (process 2299982) detached]
+Python Exception <class 'AssertionError'>:
+/workspaces/envoy/xds_debug/gdb_inspect.gdb:55: Error in sourced command file:
+Error occurred in Python.
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+INSPECTION UTC 2026-09-05T18:34:12.137928+00:00
+$1 = false
+REGISTERED_WORKERS 4
+WORKER 0 DISPATCHER 0x10ebffa72dc0
+$2 = {
+  <std::__1::__list_imp<absl::lts_20260107::AnyInvocable<void()>, std::__1::allocator<absl::lts_20260107::AnyInvocable<void()> > >> = {
+    __end_ = {
+      __prev_ = 0x10ebf8eadd80,
+      __next_ = 0x10ebff8c6f00
+    },
+    {
+      __size_ = 73624,
+      __padding1_506_ = {<No data fields>},
+      __node_alloc_ = {<No data fields>},
+      __padding2_506_ = {<No data fields>}
+    }
+  }, <No data fields>}
+WORKER 1 DISPATCHER 0x10ebffa73080
+$3 = {
+  <std::__1::__list_imp<absl::lts_20260107::AnyInvocable<void()>, std::__1::allocator<absl::lts_20260107::AnyInvocable<void()> > >> = {
+    __end_ = {
+      __prev_ = 0x10ebf8eadd00,
+      __next_ = 0x10ebff8c7b40
+    },
+    {
+      __size_ = 73624,
+      __padding1_506_ = {<No data fields>},
+      __node_alloc_ = {<No data fields>},
+      __padding2_506_ = {<No data fields>}
+    }
+  }, <No data fields>}
+WORKER 2 DISPATCHER 0x10ebffa73340
+$4 = {
+  <std::__1::__list_imp<absl::lts_20260107::AnyInvocable<void()>, std::__1::allocator<absl::lts_20260107::AnyInvocable<void()> > >> = {
+    __end_ = {
+      __prev_ = 0x10ebf8eadc80,
+      __next_ = 0x10ebff8c7e40
+    },
+    {
+      __size_ = 73624,
+      __padding1_506_ = {<No data fields>},
+      __node_alloc_ = {<No data fields>},
+      __padding2_506_ = {<No data fields>}
+    }
+  }, <No data fields>}
+WORKER 3 DISPATCHER 0x10ebffa73600
+$5 = {
+  <std::__1::__list_imp<absl::lts_20260107::AnyInvocable<void()>, std::__1::allocator<absl::lts_20260107::AnyInvocable<void()> > >> = {
+    __end_ = {
+      __prev_ = 0x10ebf8eadc00,
+      __next_ = 0x10ebff8c7fc0
+    },
+    {
+      __size_ = 73624,
+      __padding1_506_ = {<No data fields>},
+      __node_alloc_ = {<No data fields>},
+      __padding2_506_ = {<No data fields>}
+    }
+  }, <No data fields>}
+[Inferior 1 (process 2299982) detached]
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+INSPECTION UTC 2026-09-05T18:35:24.380393+00:00
+$1 = false
+REGISTERED_WORKERS 4
+WORKER 0 DISPATCHER 0x10ebffa72dc0
+QUEUE_SIZE 73765
+$2 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8ee3800,
+          size = 0
+        },
+        storage = "\0008\356\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+WORKER 1 DISPATCHER 0x10ebffa73080
+QUEUE_SIZE 73765
+$3 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8ee3780,
+          size = 0
+        },
+        storage = "\2007\356\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+WORKER 2 DISPATCHER 0x10ebffa73340
+QUEUE_SIZE 73765
+$4 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8ee3e40,
+          size = 1
+        },
+        storage = "@>\356\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+WORKER 3 DISPATCHER 0x10ebffa73600
+QUEUE_SIZE 73765
+$5 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8ee3ec0,
+          size = 0
+        },
+        storage = "\300>\356\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+[Inferior 1 (process 2299982) detached]
+DETACHED UTC 2026-09-05T18:35:26.078882+00:00
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+INSPECTION UTC 2026-09-05T18:35:46.341213+00:00
+$1 = false
+REGISTERED_WORKERS 4
+WORKER 0 DISPATCHER 0x10ebffa72dc0
+QUEUE_SIZE 73806
+$2 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8ef4a00,
+          size = 5495889489380199500
+        },
+        storage = "\000J\357\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+$3 = {
+  <std::__1::__function::__maybe_derive_from_unary_function<void()>> = {<No data fields>},
+  <std::__1::__function::__maybe_derive_from_binary_function<void()>> = {<No data fields>},
+  members of std::__1::function<void()>:
+  __f_ = {
+    __buf_ = {
+      __data = "\300K\357\370"...
+    },
+    __f_ = 0x10ebf8eed8b0
+  }
+}
+WORKER 1 DISPATCHER 0x10ebffa73080
+QUEUE_SIZE 73806
+$4 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8ef4780,
+          size = 8392847542696111465
+        },
+        storage = "\200G\357\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+WORKER 2 DISPATCHER 0x10ebffa73340
+QUEUE_SIZE 73806
+$5 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8ef4380,
+          size = 7017557529108771432
+        },
+        storage = "\200C\357\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+WORKER 3 DISPATCHER 0x10ebffa73600
+QUEUE_SIZE 73806
+$6 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8ef4240,
+          size = 1
+        },
+        storage = "@B\357\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+[Inferior 1 (process 2299982) detached]
+DETACHED UTC 2026-09-05T18:35:47.992833+00:00
+[New LWP 2300124]
+[New LWP 2299986]
+[New LWP 2299985]
+[New LWP 2299984]
+[New LWP 2299983]
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  Id   Target Id                                             Frame
+* 1    Thread 0xffffaee64020 (LWP 2299982) "envoy-static"    0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  2    Thread 0xffffacabc820 (LWP 2300124) "AccessLogFlush"  0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+  3    Thread 0xffffad2cc820 (LWP 2299986) "dog:workers_gua" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  4    Thread 0xffffadadc820 (LWP 2299985) "dog:main_thread" 0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  5    Thread 0xffffae2ec820 (LWP 2299984) "GrpcGoogClient"  0x0000ffffaebcef6c in ?? () from /lib/aarch64-linux-gnu/libc.so.6
+  6    Thread 0xffffaeb0c820 (LWP 2299983) "grpc_global_tim" 0x0000ffffaec2bb24 in syscall () from /lib/aarch64-linux-gnu/libc.so.6
+INSPECTION UTC 2026-09-05T18:39:38.904301+00:00
+$1 = false
+REGISTERED_WORKERS 4
+WORKER 0 DISPATCHER 0x10ebffa72dc0
+QUEUE_SIZE 74266
+$2 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8f96dc0,
+          size = 0
+        },
+        storage = "\300m\371\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+$3 = {
+  <std::__1::__function::__maybe_derive_from_unary_function<void()>> = {<No data fields>},
+  <std::__1::__function::__maybe_derive_from_binary_function<void()>> = {<No data fields>},
+  members of std::__1::function<void()>:
+  __f_ = {
+    __buf_ = {
+      __data = "@\177\371\370"...
+    },
+    __f_ = 0x10ebf8f91630
+  }
+}
+vtable for std::__1::__function::__func<Envoy::ThreadLocal::InstanceImpl::SlotImpl::wrapCallback(std::__1::function<void ()> const&)::$_0, void ()> + 16 in section .data.rel.ro of /build/bazel_root/base/execroot/_main/bazel-out/aarch64-opt/bin/source/exe/envoy-static
+warning: RTTI symbol not found for class 'std::__1::__function::__func<Envoy::ThreadLocal::InstanceImpl::SlotImpl::wrapCallback(std::__1::function<void ()> const&)::$_0, void ()>'
+$4 = warning: RTTI symbol not found for class 'std::__1::__function::__func<Envoy::ThreadLocal::InstanceImpl::SlotImpl::wrapCallback(std::__1::function<void ()> const&)::$_0, void ()>'
+{
+  _vptr$__base = 0xaaaae3461ce0 <vtable for std::__1::__function::__func<Envoy::ThreadLocal::InstanceImpl::SlotImpl::wrapCallback(std::__1::function<void ()> const&)::$_0, void ()>+16>
+}
+WORKER 1 DISPATCHER 0x10ebffa73080
+QUEUE_SIZE 74266
+$5 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8f97f80,
+          size = 0
+        },
+        storage = "\200\177\371\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+WORKER 2 DISPATCHER 0x10ebffa73340
+QUEUE_SIZE 74266
+$6 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8f9a000,
+          size = 0
+        },
+        storage = "\000\240\371\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+WORKER 3 DISPATCHER 0x10ebffa73600
+QUEUE_SIZE 74266
+$7 = {
+  <absl::lts_20260107::internal_any_invocable::Impl<void()>> = {
+    <absl::lts_20260107::internal_any_invocable::CoreImpl<false, void>> = {
+      state_ = {
+        remote = {
+          target = 0x10ebf8f9a080,
+          size = 0
+        },
+        storage = "\200\240\371\370"...
+      },
+      manager_ = 0xaaaadfda1c74 <absl::lts_20260107::internal_any_invocable::RemoteManagerNontrivial<std::__1::function<void ()> >(absl::lts_20260107::internal_any_invocable::FunctionToCall, absl::lts_20260107::internal_any_invocable::TypeErasedState*, absl::lts_20260107::internal_any_invocable::TypeErasedState*)>,
+      invoker_ = 0xaaaadfda1c50 <absl::lts_20260107::internal_any_invocable::RemoteInvoker<false, void, std::__1::function<void ()>&>(absl::lts_20260107::internal_any_invocable::TypeErasedState*)>
+    }, <No data fields>}, <No data fields>}
+[Inferior 1 (process 2299982) detached]
+DETACHED UTC 2026-09-05T18:39:40.695458+00:00
