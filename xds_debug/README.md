@@ -1,8 +1,9 @@
 # xDS startup memory investigation
 
 This branch preserves the original configuration, collection scripts, all memory samples,
-all heap profiles, and GDB investigation. Only this README is new. Collector PID files and
-routine collector logs are excluded. No fix is included.
+all heap profiles, and GDB investigation. Collector PID files and routine collector logs
+are excluded. No fix is included. The Date provider unit test below reproduces the
+unstarted-worker post buildup.
 
 ## Conclusion and scope
 
@@ -15,14 +16,25 @@ run the process to OOM.
 The proposed Date-only fix initializes each thread's Date cache immediately in its TLS
 object constructor, then refreshes it with a local timer. This removes recurring posts to
 unstarted workers, at the cost of per-thread timers and formatting. Asynchronous broadcasts
-already do not guarantee simultaneous visibility across workers. Timer lifetime and startup
-ordering need tests; the extra CPU cost has not been benchmarked.
+already do not guarantee simultaneous visibility across workers. Startup-time post buildup
+is covered by `DateProviderImplTest.RefreshDoesNotQueueUpdatesOnUnstartedWorker`; the extra
+CPU cost has not been benchmarked.
 
 The question for maintainers is whether to keep the fix Date-specific or address startup-time
 periodic broadcasts more broadly. Other producers found by source review were not reproduced
 in this experiment.
 
 ## Reproduce
+
+The unit test `DateProviderImplTest.RefreshDoesNotQueueUpdatesOnUnstartedWorker` in
+`test/common/http/date_provider_impl_test.cc` holds worker `post()` callbacks, then fires
+the 500ms date-refresh timer 7200 times. On this branch the test fails because queued posts
+grow from 2 to 7202. With the thread-local timer fix the queue stays at 2.
+
+```bash
+bazel test //test/common/http:date_provider_impl_test \
+  --test_arg=--gtest_filter=DateProviderImplTest.RefreshDoesNotQueueUpdatesOnUnstartedWorker
+```
 
 The original environment was a Linux AArch64 Dev Container, an optimized symbol-bearing
 binary using libc++, and four workers. The ELF build ID matched the commit above.
