@@ -1070,6 +1070,38 @@ TEST_F(CacheSessionsTest, IfNoneMatchIsEvaluatedForEachCollapsedRequest) {
   mismatch->http_source_->getHeaders(mismatch_headers.AsStdFunction());
 }
 
+TEST_F(CacheSessionsTest, IfNoneMatchNotModifiedOmitsRepresentationMetadata) {
+  auto response_headers = cacheableResponseHeaders(5);
+  response_headers->setInline(CacheCustomHeaders::etag(), R"("selected")");
+  response_headers->setCopy(Http::Headers::get().ContentType, "text/plain");
+  response_headers->setCopy(Http::CustomHeaders::get().ContentEncoding, "gzip");
+  EXPECT_CALL(*mock_http_cache_, lookup(LookupHasPath("/a"), _));
+  EXPECT_CALL(*mock_http_cache_, touch(KeyHasPath("/a"), _));
+
+  ActiveLookupResultPtr result;
+  cache_sessions_->lookup(testLookupRequestWithIfNoneMatch("/a", R"("selected")"),
+                          [&result](ActiveLookupResultPtr r) { result = std::move(r); });
+  pumpDispatcher();
+
+  ResponseMetadata metadata;
+  metadata.response_time_ = api_->timeSource().systemTime();
+  consumeCallback(captured_lookup_callbacks_[0])(
+      LookupResult{std::make_unique<MockCacheReader>(),
+                   Http::createHeaderMap<Http::ResponseHeaderMapImpl>(*response_headers), nullptr,
+                   std::move(metadata), 5});
+  pumpDispatcher();
+
+  ASSERT_THAT(result, NotNull());
+  EXPECT_THAT(result->status_, Eq(CacheEntryStatus::FoundNotModified));
+
+  MockFunction<void(Http::ResponseHeaderMapPtr, EndStream)> headers_cb;
+  EXPECT_CALL(headers_cb,
+              Call(Pointee(AllOf(HasHeader(":status", "304"), HasNoHeader("content-length"),
+                                 HasNoHeader("content-type"), HasNoHeader("content-encoding"))),
+                   EndStream::End));
+  result->http_source_->getHeaders(headers_cb.AsStdFunction());
+}
+
 TEST_F(CacheSessionsTest, IfNoneMatchIsEvaluatedOnSubsequentHitOfExistingSession) {
   auto response_headers = cacheableResponseHeaders(5);
   response_headers->setInline(CacheCustomHeaders::etag(), R"("selected")");

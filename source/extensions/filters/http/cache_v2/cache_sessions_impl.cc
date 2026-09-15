@@ -90,6 +90,11 @@ static void makeNotModified(Http::ResponseHeaderMap& headers) {
   headers.removeContentLength();
   headers.remove(Envoy::Http::Headers::get().ContentRange);
   headers.removeTransferEncoding();
+  // RFC 9110 §15.4.5: a 304 SHOULD NOT include representation metadata other than
+  // Content-Location, Date, ETag, Vary, Cache-Control, and Expires.
+  // https://www.rfc-editor.org/rfc/rfc9110.html#section-15.4.5
+  headers.remove(Envoy::Http::Headers::get().ContentType);
+  headers.remove(Envoy::Http::CustomHeaders::get().ContentEncoding);
 }
 
 void ActiveLookupContext::getHeaders(GetHeadersCallback&& cb) {
