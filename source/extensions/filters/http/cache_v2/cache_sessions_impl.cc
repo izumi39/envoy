@@ -85,16 +85,31 @@ static Http::ResponseHeaderMapPtr notSatisfiableHeaders() {
   });
 }
 
-static void makeNotModified(Http::ResponseHeaderMap& headers) {
-  headers.setStatus(enumToInt(Http::Code::NotModified));
-  headers.removeContentLength();
-  headers.remove(Envoy::Http::Headers::get().ContentRange);
-  headers.removeTransferEncoding();
-  // RFC 9110 §15.4.5: a 304 SHOULD NOT include representation metadata other than
-  // Content-Location, Date, ETag, Vary, Cache-Control, and Expires.
-  // https://www.rfc-editor.org/rfc/rfc9110.html#section-15.4.5
-  headers.remove(Envoy::Http::Headers::get().ContentType);
-  headers.remove(Envoy::Http::CustomHeaders::get().ContentEncoding);
+// RFC 9110 §15.4.5: a 304 MUST include Content-Location, Date, ETag, Vary, Cache-Control, and
+// Expires when they would have been sent with 200, and SHOULD NOT include other representation
+// metadata. Last-Modified is copied because it can guide cache updates. Age is produced by this
+// cache. https://www.rfc-editor.org/rfc/rfc9110.html#section-15.4.5
+static Http::ResponseHeaderMapPtr makeNotModified(const Http::ResponseHeaderMap& headers) {
+  static const std::string not_modified = std::to_string(enumToInt(Http::Code::NotModified));
+  auto not_modified_headers = Http::createHeaderMap<Http::ResponseHeaderMapImpl>({
+      {Http::Headers::get().Status, not_modified},
+  });
+  static const Http::LowerCaseString* const not_modified_fields[] = {
+      &Http::Headers::get().Date,
+      &Http::Headers::get().ContentLocation,
+      &Http::CustomHeaders::get().Etag,
+      &Http::CustomHeaders::get().Vary,
+      &Http::CustomHeaders::get().CacheControl,
+      &Http::CustomHeaders::get().Expires,
+      &Http::CustomHeaders::get().LastModified,
+      &Http::CustomHeaders::get().Age,
+  };
+  for (const Http::LowerCaseString* key : not_modified_fields) {
+    if (const auto header = headers.get(*key); !header.empty()) {
+      not_modified_headers->setCopy(*key, header[0]->value().getStringView());
+    }
+  }
+  return not_modified_headers;
 }
 
 void ActiveLookupContext::getHeaders(GetHeadersCallback&& cb) {
@@ -103,8 +118,7 @@ void ActiveLookupContext::getHeaders(GetHeadersCallback&& cb) {
         dispatcher(), lookup().timestamp(),
         [cb = std::move(cb)](Http::ResponseHeaderMapPtr headers, EndStream) mutable {
           ASSERT(headers != nullptr, "it should be impossible for headers to be null");
-          makeNotModified(*headers);
-          cb(std::move(headers), EndStream::End);
+          cb(makeNotModified(*headers), EndStream::End);
         });
     return;
   }

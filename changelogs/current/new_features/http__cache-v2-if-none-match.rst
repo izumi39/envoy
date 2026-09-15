@@ -1,8 +1,8 @@
 The ``cache_v2`` filter now evaluates request ``If-None-Match`` using weak comparison and can
 serve ``304 Not Modified`` from cache. See
 `RFC 9110 Section 13.1.2 <https://www.rfc-editor.org/rfc/rfc9110.html#section-13.1.2>`_.
-Generated ``304`` responses omit representation metadata such as ``Content-Type`` and
-``Content-Encoding``. See
+Generated ``304`` responses are constructed from ``Date``, ``ETag``, ``Vary``, ``Cache-Control``,
+``Expires``, ``Content-Location``, ``Last-Modified``, and ``Age``. See
 `RFC 9110 Section 15.4.5 <https://www.rfc-editor.org/rfc/rfc9110.html#section-15.4.5>`_.
 
 Requests that include ``If-Modified-Since`` still bypass the cache, including when

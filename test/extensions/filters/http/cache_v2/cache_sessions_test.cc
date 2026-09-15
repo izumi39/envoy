@@ -1073,6 +1073,10 @@ TEST_F(CacheSessionsTest, IfNoneMatchIsEvaluatedForEachCollapsedRequest) {
 TEST_F(CacheSessionsTest, IfNoneMatchNotModifiedOmitsRepresentationMetadata) {
   auto response_headers = cacheableResponseHeaders(5);
   response_headers->setInline(CacheCustomHeaders::etag(), R"("selected")");
+  response_headers->setInline(CacheCustomHeaders::lastModified(), "Sun, 06 Nov 1994 08:49:37 GMT");
+  response_headers->setInline(CacheCustomHeaders::expires(), "Sun, 07 Nov 1994 08:49:37 GMT");
+  response_headers->setCopy(Http::Headers::get().ContentLocation, "/selected");
+  response_headers->setCopy(Http::CustomHeaders::get().Vary, "accept");
   response_headers->setCopy(Http::Headers::get().ContentType, "text/plain");
   response_headers->setCopy(Http::CustomHeaders::get().ContentEncoding, "gzip");
   EXPECT_CALL(*mock_http_cache_, lookup(LookupHasPath("/a"), _));
@@ -1095,10 +1099,16 @@ TEST_F(CacheSessionsTest, IfNoneMatchNotModifiedOmitsRepresentationMetadata) {
   EXPECT_THAT(result->status_, Eq(CacheEntryStatus::FoundNotModified));
 
   MockFunction<void(Http::ResponseHeaderMapPtr, EndStream)> headers_cb;
-  EXPECT_CALL(headers_cb,
-              Call(Pointee(AllOf(HasHeader(":status", "304"), HasNoHeader("content-length"),
-                                 HasNoHeader("content-type"), HasNoHeader("content-encoding"))),
-                   EndStream::End));
+  EXPECT_CALL(
+      headers_cb,
+      Call(Pointee(AllOf(HasHeader(":status", "304"), HasHeader("cache-control", "max-age=86400"),
+                         HasHeader("etag", R"("selected")"),
+                         HasHeader("content-location", "/selected"), HasHeader("vary", "accept"),
+                         HasHeader("last-modified", "Sun, 06 Nov 1994 08:49:37 GMT"),
+                         HasNoHeader("content-length"), HasNoHeader("content-type"),
+                         HasNoHeader("content-encoding"), HasNoHeader(":scheme"),
+                         HasNoHeader(":method"))),
+           EndStream::End));
   result->http_source_->getHeaders(headers_cb.AsStdFunction());
 }
 
