@@ -36,9 +36,11 @@ absl::Status CacheabilityUtils::canServeRequestFromCache(const Http::RequestHead
   const Http::HeaderValues& header_values = Http::Headers::get();
 
   // For now, requests with unsupported conditional headers bypass the CacheFilter.
-  // This behavior does not cause any incorrect results, but may reduce the cache effectiveness.
-  // If needed to be handled properly refer to:
-  // https://httpwg.org/specs/rfc7234.html#validation.received
+  // If-None-Match is supported, but If-Modified-Since is not, so a request that includes both
+  // still bypasses the cache. This does not cause incorrect results, but may reduce cache
+  // effectiveness. See RFC 9110 §13.1.3 and RFC 9111 §4.3:
+  // https://www.rfc-editor.org/rfc/rfc9110.html#section-13.1.3
+  // https://www.rfc-editor.org/rfc/rfc9111.html#section-4.3
   // if-unmodified-since and if-match are ignored, as the spec explicitly says these
   // header fields can be ignored by caches and intermediaries.
   for (auto conditional_header : conditionalHeaders()) {
