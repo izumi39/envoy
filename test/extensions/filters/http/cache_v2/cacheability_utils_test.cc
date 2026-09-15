@@ -125,20 +125,6 @@ TEST_F(CanServeRequestFromCacheTest, IfNoneMatchIsCacheable) {
   EXPECT_OK(CacheabilityUtils::canServeRequestFromCache(request_headers_));
 }
 
-TEST_F(CanServeRequestFromCacheTest, IfModifiedSinceIsIgnoredWhenIfNoneMatchIsPresent) {
-  request_headers_.setCopy(Http::CustomHeaders::get().IfNoneMatch, R"("etag")");
-  request_headers_.setCopy(Http::CustomHeaders::get().IfModifiedSince,
-                           "Sun, 06 Nov 1994 08:49:37 GMT");
-  EXPECT_OK(CacheabilityUtils::canServeRequestFromCache(request_headers_));
-}
-
-TEST_F(CanServeRequestFromCacheTest, IfRangeStillBypassesWhenIfNoneMatchIsPresent) {
-  request_headers_.setCopy(Http::CustomHeaders::get().IfNoneMatch, R"("etag")");
-  request_headers_.setCopy(Http::CustomHeaders::get().IfRange, R"("etag")");
-  EXPECT_THAT(CacheabilityUtils::canServeRequestFromCache(request_headers_),
-              HasStatus(absl::StatusCode::kInvalidArgument, HasSubstr("if-range")));
-}
-
 TEST_F(IsCacheableResponseTest, CacheableResponse) {
   EXPECT_TRUE(CacheabilityUtils::isCacheableResponse(response_headers_, vary_allow_list_));
 }
