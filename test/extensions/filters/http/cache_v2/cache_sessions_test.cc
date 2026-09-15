@@ -1070,6 +1070,45 @@ TEST_F(CacheSessionsTest, IfNoneMatchIsEvaluatedForEachCollapsedRequest) {
   mismatch->http_source_->getHeaders(mismatch_headers.AsStdFunction());
 }
 
+TEST_F(CacheSessionsTest, IfNoneMatchIsEvaluatedOnSubsequentHitOfExistingSession) {
+  auto response_headers = cacheableResponseHeaders(5);
+  response_headers->setInline(CacheCustomHeaders::etag(), R"("selected")");
+  EXPECT_CALL(*mock_http_cache_, lookup(LookupHasPath("/a"), _));
+  EXPECT_CALL(*mock_http_cache_, touch(KeyHasPath("/a"), _)).Times(3);
+
+  ActiveLookupResultPtr populate, match, mismatch;
+  cache_sessions_->lookup(testLookupRequest("/a"),
+                          [&populate](ActiveLookupResultPtr r) { populate = std::move(r); });
+  pumpDispatcher();
+
+  ResponseMetadata metadata;
+  metadata.response_time_ = api_->timeSource().systemTime();
+  consumeCallback(captured_lookup_callbacks_[0])(
+      LookupResult{std::make_unique<MockCacheReader>(),
+                   Http::createHeaderMap<Http::ResponseHeaderMapImpl>(*response_headers), nullptr,
+                   std::move(metadata), 5});
+  pumpDispatcher();
+  ASSERT_THAT(populate, NotNull());
+  EXPECT_THAT(populate->status_, Eq(CacheEntryStatus::Hit));
+
+  cache_sessions_->lookup(testLookupRequestWithIfNoneMatch("/a", R"("selected")"),
+                          [&match](ActiveLookupResultPtr r) { match = std::move(r); });
+  cache_sessions_->lookup(testLookupRequestWithIfNoneMatch("/a", R"("different")"),
+                          [&mismatch](ActiveLookupResultPtr r) { mismatch = std::move(r); });
+  pumpDispatcher();
+
+  ASSERT_THAT(match, NotNull());
+  EXPECT_THAT(match->status_, Eq(CacheEntryStatus::FoundNotModified));
+  ASSERT_THAT(mismatch, NotNull());
+  EXPECT_THAT(mismatch->status_, Eq(CacheEntryStatus::Hit));
+
+  MockFunction<void(Http::ResponseHeaderMapPtr, EndStream)> match_headers;
+  EXPECT_CALL(match_headers,
+              Call(Pointee(AllOf(HasHeader(":status", "304"), HasNoHeader("content-length"))),
+                   EndStream::End));
+  match->http_source_->getHeaders(match_headers.AsStdFunction());
+}
+
 TEST_F(CacheSessionsTest, IfNoneMatchCombinesMultipleFieldLines) {
   auto response_headers = cacheableResponseHeaders();
   response_headers->setInline(CacheCustomHeaders::etag(), R"("selected")");

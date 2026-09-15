@@ -613,13 +613,7 @@ void CacheSession::getLookupResult(ActiveLookupRequestPtr lookup, ActiveLookupRe
         return;
       }
     }
-    auto result = std::make_unique<ActiveLookupResult>();
-    Event::Dispatcher& dispatcher = sub.dispatcher();
-    result->http_source_ = std::move(sub.context_);
-    result->status_ = status;
-    dispatcher.post([cb = std::move(sub.callback_), result = std::move(result)]() mutable {
-      cb(std::move(result));
-    });
+    sendSuccessfulLookupResultTo(sub, status);
     return;
   }
   case State::New: {
