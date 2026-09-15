@@ -41,7 +41,14 @@ absl::Status CacheabilityUtils::canServeRequestFromCache(const Http::RequestHead
   // https://httpwg.org/specs/rfc7234.html#validation.received
   // if-unmodified-since and if-match are ignored, as the spec explicitly says these
   // header fields can be ignored by caches and intermediaries.
+  // If-None-Match takes precedence over If-Modified-Since, so a request that includes
+  // If-None-Match is still eligible to be served from cache:
+  // https://www.rfc-editor.org/rfc/rfc9110.html#section-13.1.3
+  const bool has_if_none_match = headers.getInline(CacheCustomHeaders::ifNoneMatch()) != nullptr;
   for (auto conditional_header : conditionalHeaders()) {
+    if (has_if_none_match && *conditional_header == Http::CustomHeaders::get().IfModifiedSince) {
+      continue;
+    }
     if (!headers.get(*conditional_header).empty()) {
       return absl::InvalidArgumentError(*conditional_header);
     }
