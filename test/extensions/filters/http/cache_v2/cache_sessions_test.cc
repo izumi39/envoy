@@ -1102,6 +1102,29 @@ TEST_F(CacheSessionsTest, IfNoneMatchNotModifiedOmitsRepresentationMetadata) {
   result->http_source_->getHeaders(headers_cb.AsStdFunction());
 }
 
+TEST_F(CacheSessionsTest, UnquotedCachedEtagDoesNotProduceNotModified) {
+  auto response_headers = cacheableResponseHeaders();
+  response_headers->setInline(CacheCustomHeaders::etag(), "abc123");
+  EXPECT_CALL(*mock_http_cache_, lookup(LookupHasPath("/a"), _));
+  EXPECT_CALL(*mock_http_cache_, touch(KeyHasPath("/a"), _));
+
+  ActiveLookupResultPtr result;
+  cache_sessions_->lookup(testLookupRequestWithIfNoneMatch("/a", R"("abc123")"),
+                          [&result](ActiveLookupResultPtr r) { result = std::move(r); });
+  pumpDispatcher();
+
+  ResponseMetadata metadata;
+  metadata.response_time_ = api_->timeSource().systemTime();
+  consumeCallback(captured_lookup_callbacks_[0])(
+      LookupResult{std::make_unique<MockCacheReader>(),
+                   Http::createHeaderMap<Http::ResponseHeaderMapImpl>(*response_headers), nullptr,
+                   std::move(metadata), 0});
+  pumpDispatcher();
+
+  ASSERT_THAT(result, NotNull());
+  EXPECT_THAT(result->status_, Eq(CacheEntryStatus::Hit));
+}
+
 TEST_F(CacheSessionsTest, IfNoneMatchIsEvaluatedOnSubsequentHitOfExistingSession) {
   auto response_headers = cacheableResponseHeaders(5);
   response_headers->setInline(CacheCustomHeaders::etag(), R"("selected")");

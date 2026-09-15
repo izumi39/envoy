@@ -19,7 +19,9 @@ bool strongMatch(absl::string_view lhs, absl::string_view rhs);
 bool weakMatch(absl::string_view lhs, absl::string_view rhs);
 
 // Returns true when the If-None-Match field value is "*" or contains an entity tag that weakly
-// matches etag. An invalid field value does not match.
+// matches etag. An invalid field value does not match. Unquoted values are not entity tags per
+// RFC 9110 section 8.8.3, so they never match and never produce 304:
+// https://www.rfc-editor.org/rfc/rfc9110.html#section-8.8.3
 bool ifNoneMatch(absl::string_view field_value, absl::string_view etag);
 
 } // namespace EtagUtils

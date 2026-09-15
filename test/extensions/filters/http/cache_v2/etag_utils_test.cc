@@ -93,6 +93,12 @@ TEST(IfNoneMatchTest, InvalidSelectedEtagDoesNotMatchList) {
   EXPECT_FALSE(ifNoneMatch(R"("selected")", "selected"));
 }
 
+TEST(IfNoneMatchTest, UnquotedValuesNeverMatch) {
+  EXPECT_FALSE(ifNoneMatch("abc123", R"("abc123")"));
+  EXPECT_FALSE(ifNoneMatch(R"("abc123")", "abc123"));
+  EXPECT_FALSE(ifNoneMatch("abc123", "abc123"));
+}
+
 } // namespace
 } // namespace EtagUtils
 } // namespace CacheV2

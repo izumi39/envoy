@@ -11,3 +11,7 @@ the filter forwards the request rather than serving it from cache. This does not
 cached responses; it only reduces cache effectiveness. See
 `RFC 9111 Section 4.3 <https://www.rfc-editor.org/rfc/rfc9111.html#section-4.3>`_ and
 `RFC 9110 Section 13.1.3 <https://www.rfc-editor.org/rfc/rfc9110.html#section-13.1.3>`_.
+
+Unquoted ``ETag`` / ``If-None-Match`` values are not entity tags per
+`RFC 9110 Section 8.8.3 <https://www.rfc-editor.org/rfc/rfc9110.html#section-8.8.3>`_, so they do
+not match and the filter will not generate ``304 Not Modified`` for them.
